@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "686281240469",
+    "project_id": "cs4084-bebe1",
+    "storage_bucket": "cs4084-bebe1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686281240469:android:e245859211ad65d110109c",
+        "android_client_info": {
+          "package_name": "com.example.cs4084_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjBn7KseT1Q1Bh9wmVdGX_-bFASryaZ2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
