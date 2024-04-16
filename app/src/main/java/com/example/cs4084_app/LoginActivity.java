@@ -60,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // 登录成功，导航到主界面
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
                                     startActivity(intent);
                                     finish();
                                 } else {
