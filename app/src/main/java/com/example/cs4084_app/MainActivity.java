@@ -3,6 +3,7 @@ package com.example.cs4084_app;
 import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Product> productList;
     private ListView listView;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int ADD_PRODUCT_REQUEST = 2;  // Request code
     private static final int YOUR_PERMISSION_CODE = 1;
     private String[] data={"apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange",
             "watermelon","apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange",
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 // 执行点击事件的代码，比如跳转到新的Activity或者显示一个Toast消息
                 Toast.makeText(MainActivity.this, "FAB Clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, CreateItemActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, ADD_PRODUCT_REQUEST);
             }
         });
 
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 //            productList.add(product);
         }
     }
+
     private void initdb(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -146,10 +149,11 @@ public class MainActivity extends AppCompatActivity {
 
                                     // Passing data to the ProductDetailActivity
                                     detailIntent.putExtra("name", clickedProduct.getName());
-                                    detailIntent.putExtra("short_description", clickedProduct.getShort_description());
-                                    detailIntent.putExtra("long_description", clickedProduct.getLong_description());
+                                    detailIntent.putExtra("short_description", clickedProduct.getShortDescription());
+                                    detailIntent.putExtra("long_description", clickedProduct.getLongDescription());
                                     detailIntent.putExtra("price", clickedProduct.getPrice());
                                     detailIntent.putExtra("location", clickedProduct.getLocation());
+                                    detailIntent.putExtra("imageURl", clickedProduct.getImageUrl());
 //                                    // If you're passing an image ID, make sure it's passed correctly and received in the ProductDetailActivity.
 //                                    // If your images are stored as resource IDs (like R.drawable.image_name), you can pass them directly.
 //                                    detailIntent.putExtra("imageId", clickedProduct.getImageId());
@@ -216,6 +220,13 @@ public class MainActivity extends AppCompatActivity {
 
             // 使用这个 URI 进行上传操作
             uploadImageToFirebase(imageUri);
+        }
+        if (requestCode == ADD_PRODUCT_REQUEST) {
+            // Check if the result was a success and that data might have changed
+            if (resultCode == RESULT_OK) {
+                // Refresh your data here
+                initList();
+            }
         }
     }
     private void uploadImageToFirebase(Uri uri) {

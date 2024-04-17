@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -29,12 +32,18 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         TextView productPrice = (TextView) view.findViewById(R.id.product_price);
         TextView productLocation = (TextView) view.findViewById(R.id.product_location);
 
-        productImage.setImageResource(product.getImageResourceId());
+        //productImage.setImageResource(product.getImageResourceId());
         productName.setText(product.getName());
-        productDescription.setText(product.getShort_description());
+        productDescription.setText(product.getShortDescription());
         productPrice.setText(String.format(Locale.getDefault(), "£%.2f", product.getPrice()));
         productLocation.setText(product.getLocation());
-
+        if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
+            Glide.with(getContext())
+                    .load(product.getImageUrl())
+                    .into(productImage);
+        } else {
+            productImage.setImageResource(R.drawable.d); // Default image if URL is empty
+        }
         return view;
     }
 }

@@ -90,6 +90,9 @@ public class CreateItemActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             addProductToFirestore(uri.toString());
+                                            Intent returnIntent = new Intent();
+                                            setResult(RESULT_OK, returnIntent);
+                                            finish();
                                         }
                                     });
                                 }

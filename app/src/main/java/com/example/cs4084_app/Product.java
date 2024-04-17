@@ -4,16 +4,34 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 public class Product {
-    private int imageResourceId; // Assuming you use drawable resources for images
+
+
+
+
+    private String imageUrl; // Assuming you use drawable resources for images
     private String name;
 
 
+    public String getShortDescription() {
+        return shortDescription;
+    }
 
-    private String short_description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    private String shortDescription;
 
 
+    public String getLongDescription() {
+        return longDescription;
+    }
 
-    private String long_description;
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+
+    private String longDescription;
     private float price;
     private String location;
 
@@ -22,27 +40,25 @@ public class Product {
     public Product() {
         // Default constructor required for calls to DataSnapshot.toObject(Product.class)
     }
-    public Product(int imageResourceId, String name, String description,
+    public Product(String imageResourceId, String name, String short_description,
                    float price, String location) {
-        this.imageResourceId = imageResourceId;
+        this.imageUrl = imageResourceId;
         this.name = name;
-        this.short_description = description;
+        this.shortDescription = short_description;
         this.price = price;
         this.location = location;
     }
 
     // Getters
-    public int getImageResourceId() {
-        return imageResourceId;
-    }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
     public String getName() {
         return name;
     }
 
-    public String getShort_description() {
-        return short_description;
-    }
+
 
     public float getPrice() {
         return price;
@@ -52,27 +68,21 @@ public class Product {
         return location;
     }
 
-    public String getLong_description() {
-        return long_description;
-    }
 
-    public void setLong_description(String long_description) {
-        this.long_description = long_description;
-    }
+
+
 
     // Setters (if you need to modify the product data)
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
-    }
+
 
     public void setName(String name) {
         this.name = name;
     }
-
-
-    public void setShort_description(String short_description) {
-        this.short_description = short_description;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
+
+
     public void setPrice(float price) {
         this.price = price;
     }

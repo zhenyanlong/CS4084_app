@@ -1,5 +1,7 @@
 package com.example.cs4084_app;
 
+import com.bumptech.glide.Glide;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -7,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.Locale;
 
@@ -23,7 +27,7 @@ public class ItemDetailedActivity extends AppCompatActivity {
         String longDescription=getIntent().getStringExtra("long_description");
         float price = getIntent().getFloatExtra("price",0.0f);
         String location = getIntent().getStringExtra("location");
-        int imageId = getIntent().getIntExtra("imageId", 0); // 0 is a default value
+        String imageURl = getIntent().getStringExtra("imageURl"); // 0 is a default value
 
         ImageView imageView = findViewById(R.id.image);
         TextView nameView = findViewById(R.id.Name_text);
@@ -34,6 +38,13 @@ public class ItemDetailedActivity extends AppCompatActivity {
         longDescriptionView.setText(longDescription);
         TextView priceView = findViewById(R.id.price_text);
         priceView.setText(String.format(Locale.getDefault(), "£%.2f", price));
+        if (imageURl != null && !imageURl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageURl)
+                    .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.d); // Default image if URL is empty
+        }
         //close function
         Button returnButton = findViewById(R.id.close_button);
         returnButton.setOnClickListener(new View.OnClickListener() {
