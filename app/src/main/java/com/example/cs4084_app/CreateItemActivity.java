@@ -1,11 +1,14 @@
 package com.example.cs4084_app;
 
 import static com.google.firebase.appcheck.internal.util.Logger.TAG;
-
+import android.Manifest;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +38,8 @@ import java.util.UUID;
 
 public class CreateItemActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-
+    private static final int MAP_REQUEST_CODE = 100;
+    private static final int LOCATION_REQUEST_CODE=2;
     private Spinner spinnerCategory;
     private Uri imageUri;
     private String UID;
@@ -55,7 +59,17 @@ public class CreateItemActivity extends AppCompatActivity {
                 openFileChooser();
             }
         });
-
+        Button mapButton = findViewById(R.id.map_button);
+        mapButton.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        LOCATION_REQUEST_CODE);
+            }
+            Intent intent = new Intent(CreateItemActivity.this, MapActivity.class);
+            startActivityForResult(intent, MAP_REQUEST_CODE);
+        });
         initSpinner();
         initButton();
     }
@@ -179,6 +193,11 @@ public class CreateItemActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
             imageViewProduct.setImageURI(imageUri);
+        }
+        if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK) {
+            double latitude = data.getDoubleExtra("latitude", 0);
+            double longitude = data.getDoubleExtra("longitude", 0);
+            // Use these coordinates as needed, e.g., show them on the UI or store them
         }
     }
     private void setCurrentUID(){
