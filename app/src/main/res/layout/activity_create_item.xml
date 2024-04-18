@@ -103,12 +103,14 @@
             android:layout_weight="0.5"
             android:text="Map"/>
     </LinearLayout>
-        <EditText
-            android:id="@+id/editTextLocation"
+
+        <TextView
+            android:id="@+id/textViewLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="location"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/buttonAddProduct"

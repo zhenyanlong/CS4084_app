@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.UUID;
@@ -44,9 +46,12 @@ public class CreateItemActivity extends AppCompatActivity {
     private Uri imageUri;
     private String UID;
     private ImageView imageViewProduct;
+    private TextView locationTextView;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+    private double latitude;
+    private double longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,8 @@ public class CreateItemActivity extends AppCompatActivity {
 
         // Initialize ImageView and other UI components
         imageViewProduct = findViewById(R.id.imageViewProduct);
+        //initialize locationTextView
+        locationTextView=(TextView)findViewById(R.id.textViewLocation);
         // Set up ImageView onClickListener and other listeners
 
         Button addButton = findViewById(R.id.buttonAddProduct);
@@ -134,7 +141,7 @@ public class CreateItemActivity extends AppCompatActivity {
         float price = Float.parseFloat(((EditText) findViewById(R.id.editTextProductPrice)).getText().toString());
         String shortDescription = ((EditText) findViewById(R.id.editTextShortDescription)).getText().toString();
         String longDescription = ((EditText) findViewById(R.id.editTextLongDescription)).getText().toString();
-        String location = ((EditText) findViewById(R.id.editTextLocation)).getText().toString();
+        //String location = ((EditText) findViewById(R.id.editTextLocation)).getText().toString();
         String category = spinnerCategory.getSelectedItem().toString();
 
         // Get the current user's UID
@@ -147,12 +154,13 @@ public class CreateItemActivity extends AppCompatActivity {
         product.put("price", price);
         product.put("shortDescription", shortDescription);
         product.put("longDescription", longDescription);
-        product.put("location", location);
+        //product.put("location", location);
         product.put("category", category);
         product.put("is_sold",false);
         product.put("uid", uid); // Include the user's UID
         product.put("imageUrl", imageUrl); // Include the image URL
-
+        product.put("latitude",latitude);
+        product.put("longitude",longitude);
         // Add the product to Firestore
         db.collection("products")
                 .add(product)
@@ -195,9 +203,10 @@ public class CreateItemActivity extends AppCompatActivity {
             imageViewProduct.setImageURI(imageUri);
         }
         if (requestCode == MAP_REQUEST_CODE && resultCode == RESULT_OK) {
-            double latitude = data.getDoubleExtra("latitude", 0);
-            double longitude = data.getDoubleExtra("longitude", 0);
+            latitude = data.getDoubleExtra("latitude", 0);
+            longitude = data.getDoubleExtra("longitude", 0);
             // Use these coordinates as needed, e.g., show them on the UI or store them
+            locationTextView.setText(String.format(Locale.getDefault(), "%.2f", latitude)+","+String.format(Locale.getDefault(), "%.2f", longitude));
         }
     }
     private void setCurrentUID(){

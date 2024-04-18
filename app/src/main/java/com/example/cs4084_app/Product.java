@@ -6,8 +6,25 @@ import java.util.Locale;
 public class Product {
 
 
+    public double getLatitude() {
+        return latitude;
+    }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
+    private double latitude;
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    private double longitude;
     private String imageUrl; // Assuming you use drawable resources for images
     private String name;
 

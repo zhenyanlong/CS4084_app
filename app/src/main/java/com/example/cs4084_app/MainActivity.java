@@ -20,6 +20,10 @@ import android.widget.ListView;
 import android.Manifest;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,9 +47,11 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private List<Product> productList;
     private ListView listView;
+    private Double [] currentLocation= {0.0, 0.0};
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int ADD_PRODUCT_REQUEST = 2;  // Request code
     private static final int YOUR_PERMISSION_CODE = 1;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE=101;
     private String[] data={"apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange",
             "watermelon","apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange",
             "watermelon","apple","pear","strawberry","Orange","watermelon"};
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(this);
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        initCurrentLocation();
             initList();
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSION_CODE);
@@ -137,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                                 productList.add(product);
                             }
                             // Update your adapter with this productList
-                            ProductAdapter adapter = new ProductAdapter(MainActivity.this, R.layout.product_item, productList);
+                            ProductAdapter adapter = new ProductAdapter(MainActivity.this, R.layout.product_item, productList,currentLocation[0],currentLocation[1]);
                             listView = (ListView) findViewById(R.id.list_view);
                             listView.setAdapter(adapter);
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -248,5 +255,27 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void initCurrentLocation(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+
+            try {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED) {
+                    locationClient.getLastLocation().addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            currentLocation[0] = location.getLatitude();
+                            currentLocation[1] = location.getLongitude();
+                        } else {
+                            Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } catch (SecurityException e) {
+                Toast.makeText(this, "Location service error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
