@@ -54,7 +54,11 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
 
+    implementation ("androidx.drawerlayout:drawerlayout:1.1.1")
+    implementation ("com.google.android.material:material:1.4.0")
+    // Ensure you have the latest versions or the versions that are compatible with your setup
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

@@ -12,6 +12,8 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="category_prompt">Choose a category</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
     <string-array name="product_categories">
         <item>Electronics</item>
         <item>Clothing</item>

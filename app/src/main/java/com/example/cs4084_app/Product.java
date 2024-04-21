@@ -5,7 +5,15 @@ import java.util.Locale;
 
 public class Product {
 
+    public String getItemID() {
+        return itemID;
+    }
 
+    public void setItemID(String itemID) {
+        this.itemID = itemID;
+    }
+
+    private String itemID;
     public double getLatitude() {
         return latitude;
     }

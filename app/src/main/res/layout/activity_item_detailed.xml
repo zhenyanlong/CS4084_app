@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ItemDetailedActivity"
-    android:orientation="vertical">
+    android:fillViewport="true"
+    tools:context=".ItemDetailedActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <Button
         android:id="@+id/close_button"
         android:layout_width="wrap_content"
@@ -47,4 +51,39 @@
         android:layout_height="wrap_content"
         android:text="LongDescription"
         android:textSize="16sp" />
+    <Button
+        android:id="@+id/btnShowAllProductsMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Products on Map"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Comments:"
+        android:textSize="24sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+        android:id="@+id/commentEditText"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:hint="Input your comment"/>
+        <Button
+            android:id="@+id/commentSubmitButton"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:text="submit"/>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/comments_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
+</ScrollView>

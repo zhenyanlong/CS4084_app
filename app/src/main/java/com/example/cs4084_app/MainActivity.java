@@ -4,9 +4,13 @@ import static android.content.ContentValues.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.Manifest;
 import android.widget.Toast;
@@ -29,6 +34,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +53,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private List<Product> productList;
     private ListView listView;
+    private DrawerLayout drawer;
     private Double [] currentLocation= {0.0, 0.0};
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int ADD_PRODUCT_REQUEST = 2;  // Request code
@@ -73,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         initCurrentLocation();
+        initDrawerLayout();
             initList();
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSION_CODE);
@@ -141,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Product product = document.toObject(Product.class);
+                                product.setItemID(document.getId());
                                 productList.add(product);
                             }
                             // Update your adapter with this productList
@@ -161,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
                                     detailIntent.putExtra("price", clickedProduct.getPrice());
                                     detailIntent.putExtra("location", clickedProduct.getLocation());
                                     detailIntent.putExtra("imageURl", clickedProduct.getImageUrl());
+                                    detailIntent.putExtra("latitude", clickedProduct.getLatitude());
+                                    detailIntent.putExtra("longitude", clickedProduct.getLongitude());
+                                    detailIntent.putExtra("itemID",clickedProduct.getItemID());
 //                                    // If you're passing an image ID, make sure it's passed correctly and received in the ProductDetailActivity.
 //                                    // If your images are stored as resource IDs (like R.drawable.image_name), you can pass them directly.
 //                                    detailIntent.putExtra("imageId", clickedProduct.getImageId());
@@ -276,6 +288,44 @@ public class MainActivity extends AppCompatActivity {
             } catch (SecurityException e) {
                 Toast.makeText(this, "Location service error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
+        }
+    }
+    private void initDrawerLayout(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Second-hand online mall");
+        }
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            // Handle navigation view item clicks here.
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                // Handle the home action
+            } else if (id == R.id.nav_settings) {
+                // Handle the profile action
+            }
+
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
+        // Button to open drawer
+        findViewById(R.id.open_drawer_button).setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
+    }
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 }

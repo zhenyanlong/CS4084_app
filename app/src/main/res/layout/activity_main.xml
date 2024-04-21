@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-<!--<SearchView-->
-<!--android:id="@+id/search_view"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="wrap_content"/>-->
 
+    <!-- The main content view -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Your existing layout, for example a Toolbar -->
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+            <Button
+                android:id="@+id/open_drawer_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/navigation_drawer_open" />
+        </androidx.appcompat.widget.Toolbar>
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
         android:layout_height="50dp" />
+
 
     <ListView
         android:id="@+id/list_view"
@@ -33,5 +51,15 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+    </RelativeLayout>
 
-</RelativeLayout>
+    <!-- NavigationView for the navigation drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
