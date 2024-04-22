@@ -26,18 +26,75 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/navigation_drawer_open" />
         </androidx.appcompat.widget.Toolbar>
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:orientation="horizontal"
+            >
+
     <SearchView
         android:id="@+id/search_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_below="@+id/toolbar"
         android:layout_height="50dp" />
+            <Button
+                android:id="@+id/button_toggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:layout_centerHorizontal="true"
+                android:text="Fliter" />
+        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fliter_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/search_layout">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="0.7"
+        android:layout_height="match_parent"
+        android:text="Min Price:"
+        android:gravity="center_vertical"/>
+    <EditText
+        android:id="@+id/minPriceText"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:hint="min"
+        android:inputType="numberDecimal"
+        android:text="0"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="0.7"
+        android:layout_height="match_parent"
+        android:text="Max Price:"
+        android:gravity="center_vertical"/>
+    <EditText
+        android:id="@+id/maxPriceText"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:hint="max"
+        android:inputType="numberDecimal"
+        android:text="10000"/>
 
+</LinearLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search_view"
+        android:layout_below="@+id/fliter_area"
         android:layout_marginTop="1dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,6 +117,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu" />
+        app:menu="@menu/drawer_menu" >
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

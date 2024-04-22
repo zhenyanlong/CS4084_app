@@ -138,14 +138,14 @@ public class ItemDetailedActivity extends AppCompatActivity {
         adapter = new CommentsAdapter(comments);
         commentsRecyclerView.setAdapter(adapter);
 
-        String itemId="TS8raFUeabO3khQ7lQgY";
+        String itemId=getIntent().getStringExtra("itemID");
         //String start = itemID; // 你的 itemID 或其开始部分
         //String end = itemID + "\uf8ff"; // 使用高值字符增加范围到所有可能的后缀
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("comments")
-                //.whereEqualTo("itemID",itemId)
-                .orderBy("timestamp")
+                .whereEqualTo("itemID",itemId)
+                //.orderBy("timestamp")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

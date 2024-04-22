@@ -16,11 +16,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.Manifest;
 import android.widget.Toast;
@@ -35,8 +39,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -55,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private DrawerLayout drawer;
     private Double [] currentLocation= {0.0, 0.0};
+    private double minPrice;
+    private double maxPrice;
+
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int ADD_PRODUCT_REQUEST = 2;  // Request code
     private static final int YOUR_PERMISSION_CODE = 1;
@@ -81,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         initCurrentLocation();
         initDrawerLayout();
+        initFliterArea();
+        updatePriceLimitation();
             initList();
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSION_CODE);
@@ -139,7 +150,15 @@ public class MainActivity extends AppCompatActivity {
     private void initList(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
-                .whereEqualTo("is_sold", false)
+                .where(
+                    Filter.and(
+                            Filter.equalTo("is_sold", false)
+                            //Filter.greaterThan("price",0)
+                    )
+                )
+
+                //.whereGreaterThanOrEqualTo("price",0)
+                //.whereLessThanOrEqualTo("price",maxPrice)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -147,10 +166,12 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             productList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                Product product = document.toObject(Product.class);
-                                product.setItemID(document.getId());
-                                productList.add(product);
+                                if(minPrice<=document.getDouble("price")&&document.getDouble("price")<=maxPrice) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    Product product = document.toObject(Product.class);
+                                    product.setItemID(document.getId());
+                                    productList.add(product);
+                                }
                             }
                             // Update your adapter with this productList
                             ProductAdapter adapter = new ProductAdapter(MainActivity.this, R.layout.product_item, productList,currentLocation[0],currentLocation[1]);
@@ -290,6 +311,91 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    private void initFliterArea(){
+        LinearLayout fliterArea = findViewById(R.id.fliter_area);
+        Button toggleButton = findViewById(R.id.button_toggle);
+        fliterArea.setVisibility(View.GONE);
+        toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fliterArea.getVisibility() == View.VISIBLE) {
+                    fliterArea.setVisibility(View.GONE);
+                } else {
+                    fliterArea.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+    private void updatePriceLimitation(){
+        EditText minPriceText=findViewById(R.id.minPriceText);
+        EditText maxPriceText=findViewById(R.id.maxPriceText);
+
+        minPrice=Double.parseDouble(String.valueOf(minPriceText.getText()));
+        maxPrice=Double.parseDouble(String.valueOf(maxPriceText.getText()));
+        minPriceText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 此处代码通常留空，因为我们不需要在文本变化前做什么
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 文本变化时调用，但处理逻辑放在下面的afterTextChanged中
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 检查和调整输入值
+                if (!s.toString().isEmpty()) {
+                    try {
+                        double value = Double.parseDouble(s.toString());
+                        if (value < 0) {
+                            minPriceText.setText("0"); // 如果值小于0，则设置为0
+                            minPriceText.setSelection(minPriceText.getText().length()); // 设置光标位置到末尾
+
+                        }
+                        minPrice=Double.parseDouble(String.valueOf(minPriceText.getText()));
+                        initList();
+                    } catch (NumberFormatException e) {
+                        minPriceText.setText("0"); // 如果转换失败（非数字），也设置为0
+                        minPriceText.setSelection(minPriceText.getText().length()); // 设置光标位置到末尾
+                    }
+                }
+            }
+        });
+        maxPriceText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 此处代码通常留空，因为我们不需要在文本变化前做什么
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 文本变化时调用，但处理逻辑放在下面的afterTextChanged中
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 检查和调整输入值
+                if (!s.toString().isEmpty()) {
+                    try {
+                        double value = Double.parseDouble(s.toString());
+                        if (value < 0) {
+                            maxPriceText.setText("0"); // 如果值小于0，则设置为0
+                            maxPriceText.setSelection(maxPriceText.getText().length()); // 设置光标位置到末尾
+
+                        }
+                        maxPrice=Double.parseDouble(String.valueOf(maxPriceText.getText()));
+                        initList();
+                    } catch (NumberFormatException e) {
+                        maxPriceText.setText("0"); // 如果转换失败（非数字），也设置为0
+                        maxPriceText.setSelection(maxPriceText.getText().length()); // 设置光标位置到末尾
+                    }
+                }
+            }
+        });
+    }
+
     private void initDrawerLayout(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -319,6 +425,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Button to open drawer
         findViewById(R.id.open_drawer_button).setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));
+
+//        //NavigationView navigationView = findViewById(R.id.nav_view);
+//        RangeSlider rangeSlider = navigationView.getHeaderView(0).findViewById(R.id.range_slider);
+//
+//        rangeSlider.addOnChangeListener(new RangeSlider.OnChangeListener() {
+//            @Override
+//            public void onValueChange(RangeSlider slider, float value, boolean fromUser) {
+//                // Handle the value change here
+//                List<Float> values = slider.getValues();
+//                float minValue = values.get(0);
+//                float maxValue = values.get(1);
+//                // Use these values for filtering data or any other purpose
+//            }
+//        });
     }
     @Override
     public void onBackPressed() {
