@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -50,6 +52,7 @@ public class PersonalStoreActivity extends AppCompatActivity {
         } else {
             getLastLocation();
         }
+        initCloseButton();
     }
 
     @Override
@@ -144,5 +147,13 @@ public class PersonalStoreActivity extends AppCompatActivity {
             }
         });
     }
-
+    private void initCloseButton(){
+        Button closeButton=findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 }
