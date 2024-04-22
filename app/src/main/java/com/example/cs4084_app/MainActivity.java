@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.Manifest;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private double minPrice;
     private double maxPrice;
 
+    private String searchName="";
     private static final int PICK_IMAGE_REQUEST = 1;
     private static final int ADD_PRODUCT_REQUEST = 2;  // Request code
     private static final int YOUR_PERMISSION_CODE = 1;
@@ -166,11 +168,21 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             productList = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if(minPrice<=document.getDouble("price")&&document.getDouble("price")<=maxPrice) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    Product product = document.toObject(Product.class);
-                                    product.setItemID(document.getId());
-                                    productList.add(product);
+                                if(searchName.isEmpty()) {
+                                    if (minPrice <= document.getDouble("price") && document.getDouble("price") <= maxPrice) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        Product product = document.toObject(Product.class);
+                                        product.setItemID(document.getId());
+                                        productList.add(product);
+                                    }
+                                }else{
+                                    if (document.getString("name").toLowerCase().contains(searchName.toLowerCase())&&
+                                            minPrice <= document.getDouble("price") && document.getDouble("price") <= maxPrice) {
+                                        Log.d(TAG, document.getId() + " => " + document.getData());
+                                        Product product = document.toObject(Product.class);
+                                        product.setItemID(document.getId());
+                                        productList.add(product);
+                                    }
                                 }
                             }
                             // Update your adapter with this productList
@@ -392,6 +404,60 @@ public class MainActivity extends AppCompatActivity {
                         maxPriceText.setSelection(maxPriceText.getText().length()); // 设置光标位置到末尾
                     }
                 }
+            }
+        });
+//        EditText searchText_dd = findViewById(R.id.search_view);
+//        searchText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                // 此处代码通常留空，因为我们不需要在文本变化前做什么
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                // 文本变化时调用，但处理逻辑放在下面的afterTextChanged中
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                // 检查和调整输入值
+//                if (!s.toString().isEmpty()) {
+////                    try {
+////                        double value = Double.parseDouble(s.toString());
+////                        if (value < 0) {
+////                            searchText.setText("0"); // 如果值小于0，则设置为0
+////                            searchText.setSelection(searchText.getText().length()); // 设置光标位置到末尾
+////                        }
+////                    } catch (NumberFormatException e) {
+////                        searchText.setText("0"); // 如果转换失败（非数字），也设置为0
+////                        searchText.setSelection(searchText.getText().length()); // 设置光标位置到末尾
+////                    }
+//                    try{
+//                        searchName=s.toString();
+//                        initList();
+//                    }catch (NumberFormatException e){
+//
+//                    }
+//                }else{
+//                    searchName="";
+//                }
+//            }
+//        });
+        SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // 当用户提交查询（例如按下键盘上的搜索按钮）时调用
+                return false; // 如果你不处理提交事件，返回false
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchName=newText;
+                initList();
+                // 当查询文本发生变化时调用
+                //checkNameInString(newText, "Here is the target string where we need to check the name");
+                return true;
             }
         });
     }
