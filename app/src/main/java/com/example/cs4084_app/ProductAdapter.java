@@ -32,6 +32,11 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         currentLongitude=longitude;
     }
 
+    public ProductAdapter(PersonalStoreActivity context, int productItem, List<Product> products) {
+        super(context,productItem,products);
+        resourceId = productItem;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Product product = getItem(position); // Get current instance of Product class

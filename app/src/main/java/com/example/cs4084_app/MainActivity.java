@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         initDrawerLayout();
         initFliterArea();
         updatePriceLimitation();
-            initList();
+        initList();
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSION_CODE);
 //        }
@@ -153,10 +153,10 @@ public class MainActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("products")
                 .where(
-                    Filter.and(
-                            Filter.equalTo("is_sold", false)
-                            //Filter.greaterThan("price",0)
-                    )
+                        Filter.and(
+                                Filter.equalTo("is_sold", false)
+                                //Filter.greaterThan("price",0)
+                        )
                 )
 
                 //.whereGreaterThanOrEqualTo("price",0)
@@ -483,6 +483,9 @@ public class MainActivity extends AppCompatActivity {
                 // Handle the home action
             } else if (id == R.id.nav_settings) {
                 // Handle the profile action
+                // 启动 PersonalStoreActivity
+                Intent intent = new Intent(MainActivity.this, PersonalStoreActivity.class);
+                startActivity(intent);
             }
 
             drawer.closeDrawer(GravityCompat.START);

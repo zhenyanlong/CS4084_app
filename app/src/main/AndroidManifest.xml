@@ -26,6 +26,9 @@
             android:name=".ProductsMapActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".PersonalStoreActivity"
+            android:exported="true" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDyEJBACW0mFF2ViOKTbvQF_L0WnYCuryw" />
@@ -44,6 +47,9 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true">
+
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,6 +62,8 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+
     </application>
 
 </manifest>

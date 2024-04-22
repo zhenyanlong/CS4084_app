@@ -8,7 +8,15 @@ public class Product {
     public String getItemID() {
         return itemID;
     }
+    public boolean isIs_sold() {
+        return is_sold;
+    }
 
+    public void setIs_sold(boolean is_sold) {
+        this.is_sold = is_sold;
+    }
+
+    private boolean is_sold;
     public void setItemID(String itemID) {
         this.itemID = itemID;
     }
