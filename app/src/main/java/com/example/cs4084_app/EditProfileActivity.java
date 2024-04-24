@@ -1,5 +1,6 @@
 package com.example.cs4084_app;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -20,8 +21,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
-
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,12 +54,27 @@ public class EditProfileActivity extends AppCompatActivity {
                 //submitProfileChanges();
             //}
         //});
+        getUsername();
         submitButton.setOnClickListener((v) ->{
             setUsername();
         });
 
         // Load user data if available
         //loadUserData();
+    }
+    void getUsername(){
+        FirebaseUtill.currentUserDetails().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    userModel = task.getResult().toObject(UserModel.class);
+                    if(userModel!=null){
+                        usernameInput.setText(userModel.getUsername());
+                        phoneNumberEditText.setText(userModel.getPhone());
+                    }
+                }
+            }
+        });
     }
     void setUsername(){
         String username = usernameInput.getText().toString();
