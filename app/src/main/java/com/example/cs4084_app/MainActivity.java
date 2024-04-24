@@ -481,11 +481,15 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.nav_home) {
                 // Handle the home action
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                startActivity(intent);
             } else if (id == R.id.nav_settings) {
                 // Handle the profile action
                 // 启动 PersonalStoreActivity
                 Intent intent = new Intent(MainActivity.this, PersonalStoreActivity.class);
                 startActivity(intent);
+            }else if (id==R.id.chat_room){
+
             }
 
             drawer.closeDrawer(GravityCompat.START);

@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+
                                     // 登录成功，导航到主界面
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
