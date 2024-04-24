@@ -23,12 +23,33 @@
         android:theme="@style/Theme.CS4084_app"
         tools:targetApi="31">
         <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".searchUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity2"
+            android:exported="false" />
+        <activity
+            android:name=".LoginUsernameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginOTPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginPhoneActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashActivity"
+            android:exported="false" />
+        <activity
             android:name=".ProductsMapActivity"
             android:exported="false" />
-
         <activity
             android:name=".PersonalStoreActivity"
             android:exported="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDyEJBACW0mFF2ViOKTbvQF_L0WnYCuryw" />
@@ -47,9 +68,6 @@
         <activity
             android:name=".LoginActivity"
             android:exported="true">
-
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,8 +80,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
-
-
     </application>
 
 </manifest>

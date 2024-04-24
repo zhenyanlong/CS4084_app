@@ -75,6 +75,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("androidx.activity:activity:1.8.0")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.13.0")
@@ -100,4 +101,9 @@ dependencies {
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation ("com.hbb20:ccp:2.7.3")
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation ("com.firebaseui:firebase-ui-firestore:8.0.2")
+
 }
