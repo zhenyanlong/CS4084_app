@@ -488,8 +488,9 @@ public class MainActivity extends AppCompatActivity {
                 // 启动 PersonalStoreActivity
                 Intent intent = new Intent(MainActivity.this, PersonalStoreActivity.class);
                 startActivity(intent);
-            }else if (id==R.id.chat_room){
-
+            }else if (id==R.id.chat_room_entrance){
+                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                startActivity(intent);
             }
 
             drawer.closeDrawer(GravityCompat.START);

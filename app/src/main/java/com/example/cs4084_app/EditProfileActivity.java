@@ -2,6 +2,7 @@ package com.example.cs4084_app;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -9,8 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.cs4084_app.model.UserModel;
+import com.example.cs4084_app.utills.FirebaseUtill;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,11 +27,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
-    private EditText phoneNumberEditText, usernameEditText;
+    private EditText  usernameInput;
     private Button submitButton;
-
+    private String phoneNumber;
+    private EditText phoneNumberEditText;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    UserModel userModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,88 +45,49 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Initialize views
         phoneNumberEditText = findViewById(R.id.editTextPhoneNumber);
-        usernameEditText = findViewById(R.id.editTextUsername);
+        usernameInput = findViewById(R.id.editTextUsername);
         submitButton = findViewById(R.id.buttonSubmit);
 
         // Set click listener for submit button
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitProfileChanges();
-            }
+        //submitButton.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            //public void onClick(View v) {
+                //submitProfileChanges();
+            //}
+        //});
+        submitButton.setOnClickListener((v) ->{
+            setUsername();
         });
 
         // Load user data if available
-        loadUserData();
+        //loadUserData();
     }
-    private void loadUserData() {
-        String userId = mAuth.getCurrentUser().getUid();
-
-        // Get user data from Firestore
-        db.collection("users").document(userId).get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                // User data found, fill the EditText fields
-                                String phoneNumber = document.getString("phoneNumber");
-                                String username = document.getString("userName");
-
-                                phoneNumberEditText.setText(phoneNumber);
-                                usernameEditText.setText(username);
-                            } else {
-                                // User data not found, do nothing
-                            }
-                        } else {
-                            Toast.makeText(EditProfileActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-    private void submitProfileChanges() {
-        String phoneNumber = phoneNumberEditText.getText().toString().trim();
-        String username = usernameEditText.getText().toString().trim();
-
-        // Validate input fields
-        if (TextUtils.isEmpty(phoneNumber)) {
-            phoneNumberEditText.setError("Phone number is required");
-            phoneNumberEditText.requestFocus();
-            return;
+    void setUsername(){
+        String username = usernameInput.getText().toString();
+        String phoneNumber = phoneNumberEditText.getText().toString();
+        if(username.isEmpty() || username.length() < 3){
+            usernameInput.setError("Username length should be at least 3 chars");
+            return ;
         }
 
-        if (TextUtils.isEmpty(username)) {
-            usernameEditText.setError("Username is required");
-            usernameEditText.requestFocus();
-            return;
+        if(userModel!=null){
+            userModel.setUsername(username);
+        }
+        else{
+            userModel = new UserModel(phoneNumber, username, Timestamp.now(), FirebaseUtill.currentUserId());
+
         }
 
-        // Get the current user ID
-        String userId = mAuth.getCurrentUser().getUid();
-
-        // Create a user object with the provided data
-        //User user = new User(phoneNumber, username);
-        // Create the product object or map
-        Map<String, Object> user = new HashMap<>();
-        user.put("phoneNumber",phoneNumber);
-        user.put("userName",username);
-        user.put("timestamp",System.currentTimeMillis());
-
-        // Upload the user data to Firestore
-        DocumentReference userRef = db.collection("users").document(userId);
-        userRef.set(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                            // Finish the activity
-                            finish();
-                        } else {
-                            Toast.makeText(EditProfileActivity.this, "Failed to update profile. Please try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        FirebaseUtill.currentUserDetails().set(userModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Intent intent = new Intent(EditProfileActivity.this, MainActivity2.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
     }
+
 }
