@@ -98,7 +98,14 @@ public class CreateItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Validate input fields (not shown here for brevity)
                 // ...
-
+                if (locationTextView.getText().toString().isEmpty() ||
+                        ((EditText) findViewById(R.id.editTextProductName)).getText().toString().isEmpty() ||
+                        ((EditText) findViewById(R.id.editTextProductPrice)).getText().toString().isEmpty() ||
+                        ((EditText) findViewById(R.id.editTextShortDescription)).getText().toString().isEmpty() ||
+                        ((EditText) findViewById(R.id.editTextLongDescription)).getText().toString().isEmpty()) {
+                    Toast.makeText(CreateItemActivity.this, "Please input all of options.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // First, upload the image
                 if (imageUri != null) {
                     StorageReference fileReference = storageReference.child("images/" + UUID.randomUUID().toString());
@@ -129,7 +136,7 @@ public class CreateItemActivity extends AppCompatActivity {
                 } else {
                     // If there is no image selected, you can choose to add the product without an image
                     // or inform the user that an image is required.
-                    Toast.makeText(CreateItemActivity.this, "Please choose photo." , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateItemActivity.this, "Please choose photo.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

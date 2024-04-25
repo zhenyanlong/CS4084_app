@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_home"
+    <item android:id="@+id/nav_profile"
         android:title="Edit Profile"
         />
-    <item android:id="@+id/nav_settings"
+    <item android:id="@+id/nav_own_items"
         android:title="Managed Item"
         />
     <item android:id="@+id/chat_room_entrance"
