@@ -42,7 +42,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
     private Marker currentMarker;
     private LatLng currentLatLng;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +61,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         Button confirmButton = findViewById(R.id.confirmButton);
         confirmButton.setOnClickListener(v -> confirmLocation());
     }
-
     private void placeMarker(LatLng latLng) {
         if (currentMarker != null) {
             currentMarker.remove(); // Remove the previous marker
@@ -83,7 +81,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             Toast.makeText(this, "Please select a location", Toast.LENGTH_SHORT).show();
         }
     }
-
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
@@ -92,23 +89,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             getCurrentLocation();
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //checkLocationPermission();
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
                 mMap.setMyLocationEnabled(true);
                 getCurrentLocation();
             } else {

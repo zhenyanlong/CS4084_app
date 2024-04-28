@@ -57,7 +57,6 @@ public class EditProfileActivity extends AppCompatActivity {
         getUsername();
         submitButton.setOnClickListener((v) ->{
             setUsername();
-            finish();
         });
 
         // Load user data if available
@@ -97,11 +96,9 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onComplete(@androidx.annotation.NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-
-//                    Intent intent = new Intent(EditProfileActivity.this, MainActivity2.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(intent);
-                    //finish();
+                    Intent intent = new Intent(EditProfileActivity.this, MainActivity2.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
             }
         });

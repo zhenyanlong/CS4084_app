@@ -71,8 +71,7 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.chat_recycler_view);
 
         backBtn.setOnClickListener((v) ->{
-            finish();
-            //onBackPressed();
+            onBackPressed();
         });
         otherUsername.setText(otherUser.getUsername());
 

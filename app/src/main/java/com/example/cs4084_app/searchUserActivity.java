@@ -17,7 +17,6 @@ import com.example.cs4084_app.model.UserModel;
 import com.example.cs4084_app.utills.FirebaseUtill;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.auth.User;
 

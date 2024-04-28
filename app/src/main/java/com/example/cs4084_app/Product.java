@@ -4,15 +4,7 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 public class Product {
-    public String getUid() {
-        return uid;
-    }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    private String uid;
     public String getItemID() {
         return itemID;
     }

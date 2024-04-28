@@ -40,7 +40,6 @@ import java.util.Objects;
 public class ItemDetailedActivity extends AppCompatActivity {
     private EditText commentInput;
     private Button submitButton;
-    private String uid;
     private String name;
     private String short_description;
     private double latitude;
@@ -48,14 +47,11 @@ public class ItemDetailedActivity extends AppCompatActivity {
     private RecyclerView commentsRecyclerView;
     private CommentsAdapter adapter;
     private List<String> comments = new ArrayList<>();
-    private FirebaseFirestore db;
-    private TextView nameText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detailed);
         // Retrieve data from the intent
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         String name = getIntent().getStringExtra("name");
         String shortDescription = getIntent().getStringExtra("short_description");
         String longDescription=getIntent().getStringExtra("long_description");
@@ -64,7 +60,7 @@ public class ItemDetailedActivity extends AppCompatActivity {
         String imageURl = getIntent().getStringExtra("imageURl"); // 0 is a default value
         latitude=getIntent().getDoubleExtra("latitude",0);
         longitude=getIntent().getDoubleExtra("longitude",0);
-        uid=getIntent().getStringExtra("uid");
+
         ImageView imageView = findViewById(R.id.image);
         TextView nameView = findViewById(R.id.Name_text);
         nameView.setText(name);
@@ -92,9 +88,7 @@ public class ItemDetailedActivity extends AppCompatActivity {
         });
         initMapButton();
         initCommentSubmit();
-
         initComments();
-        initSellerInfo();
     }
     private void initMapButton(){
         Button mapButton = findViewById(R.id.btnShowAllProductsMap);
@@ -109,7 +103,7 @@ public class ItemDetailedActivity extends AppCompatActivity {
         commentInput = findViewById(R.id.commentEditText);
         submitButton = findViewById(R.id.commentSubmitButton);
 
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         submitButton.setOnClickListener(view -> {
             String comment = commentInput.getText().toString();
@@ -138,34 +132,6 @@ public class ItemDetailedActivity extends AppCompatActivity {
             }
         });
     }
-    private void initSellerInfo(){
-        nameText=findViewById(R.id.sellerName);
-        db.collection("users")
-                .document(uid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                // User data found, fill the EditText fields
-                                //String phoneNumber = document.getString("phoneNumber");
-
-                                String username = document.getString("username");
-                                nameText.setText(username);
-                                Toast.makeText(ItemDetailedActivity.this, "Get username successful", Toast.LENGTH_SHORT).show();
-                            } else {
-                                // User data not found, do nothing
-                                Toast.makeText(ItemDetailedActivity.this, "Failed to get username", Toast.LENGTH_SHORT).show();
-                                Toast.makeText(ItemDetailedActivity.this, uid, Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(ItemDetailedActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
     private void initComments(){
         commentsRecyclerView = findViewById(R.id.comments_recycler_view);
         commentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -176,7 +142,7 @@ public class ItemDetailedActivity extends AppCompatActivity {
         //String start = itemID; // 你的 itemID 或其开始部分
         //String end = itemID + "\uf8ff"; // 使用高值字符增加范围到所有可能的后缀
 
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("comments")
                 .whereEqualTo("itemID",itemId)
                 //.orderBy("timestamp")
