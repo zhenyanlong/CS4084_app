@@ -1,0 +1,456 @@
+Index: app/src/main/java/com/example/cs4084_app/LoginActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cs4084_app;\r\n\r\n\r\nimport android.os.Bundle;\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\nimport android.content.Intent;\r\nimport android.text.TextUtils;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\n\r\n// LoginActivity.java\r\npublic class LoginActivity extends AppCompatActivity {\r\n\r\n    private EditText editTextEmail;\r\n    private EditText editTextPassword;\r\n    private Button buttonLogin;\r\n    private Button buttonGoToRegister;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_login);\r\n\r\n        editTextEmail = findViewById(R.id.editTextEmail);\r\n        editTextPassword = findViewById(R.id.editTextPassword);\r\n        buttonLogin = findViewById(R.id.buttonLogin);\r\n        buttonGoToRegister = findViewById(R.id.buttonGoToRegister);\r\n\r\n        buttonLogin.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                String email = editTextEmail.getText().toString();\r\n                String password = editTextPassword.getText().toString();\r\n\r\n                // 验证输入\r\n                if (TextUtils.isEmpty(email)) {\r\n                    editTextEmail.setError(\"Please enter your email\");\r\n                    return;\r\n                }\r\n\r\n                if (TextUtils.isEmpty(password)) {\r\n                    editTextPassword.setError(\"Please enter password\");\r\n                    return;\r\n                }\r\n\r\n                // 使用Firebase Auth进行登录\r\n                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)\r\n                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {\r\n                            @Override\r\n                            public void onComplete(@NonNull Task<AuthResult> task) {\r\n                                if (task.isSuccessful()) {\r\n\r\n                                    // 登录成功，导航到主界面\r\n                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);\r\n\r\n                                    startActivity(intent);\r\n                                    finish();\r\n                                } else {\r\n                                    // 登录失败，显示错误\r\n                                    Toast.makeText(LoginActivity.this, \"Login failed: \" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();\r\n                                }\r\n                            }\r\n                        });\r\n            }\r\n        });\r\n\r\n\r\n        buttonGoToRegister.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                // 跳转到注册界面\r\n                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);\r\n                startActivity(intent);\r\n            }\r\n        });\r\n    }\r\n}\r\n\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/cs4084_app/LoginActivity.java b/app/src/main/java/com/example/cs4084_app/LoginActivity.java
+--- a/app/src/main/java/com/example/cs4084_app/LoginActivity.java	
++++ b/app/src/main/java/com/example/cs4084_app/LoginActivity.java	
+@@ -34,43 +34,38 @@
+         editTextPassword = findViewById(R.id.editTextPassword);
+         buttonLogin = findViewById(R.id.buttonLogin);
+         buttonGoToRegister = findViewById(R.id.buttonGoToRegister);
+-
+-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+-            @Override
+-            public void onClick(View v) {
+-                String email = editTextEmail.getText().toString();
+-                String password = editTextPassword.getText().toString();
+-
+-                // 验证输入
+-                if (TextUtils.isEmpty(email)) {
+-                    editTextEmail.setError("Please enter your email");
+-                    return;
+-                }
++        buttonLogin.setOnClickListener(v -> {
++            String email = editTextEmail.getText().toString();
++            String password = editTextPassword.getText().toString();
++            // 验证输入
++            if (TextUtils.isEmpty(email)) {
++                editTextEmail.setError("Please enter your email");
++                return;
++            }
+ 
+-                if (TextUtils.isEmpty(password)) {
+-                    editTextPassword.setError("Please enter password");
+-                    return;
+-                }
++            if (TextUtils.isEmpty(password)) {
++                editTextPassword.setError("Please enter password");
++                return;
++            }
+ 
+-                // 使用Firebase Auth进行登录
+-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+-                            @Override
+-                            public void onComplete(@NonNull Task<AuthResult> task) {
+-                                if (task.isSuccessful()) {
++            // 使用Firebase Auth进行登录
++            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
++                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
++                        @Override
++                        public void onComplete(@NonNull Task<AuthResult> task) {
++                            if (task.isSuccessful()) {
+ 
+-                                    // 登录成功，导航到主界面
+-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
++                                // 登录成功，导航到主界面
++                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+ 
+-                                    startActivity(intent);
+-                                    finish();
+-                                } else {
+-                                    // 登录失败，显示错误
+-                                    Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+-                                }
+-                            }
+-                        });
+-            }
++                                startActivity(intent);
++                                finish();
++                            } else {
++                                // 登录失败，显示错误
++                                Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
++                            }
++                        }
++                    });
+         });
+ 
+ 
+Index: app/src/main/res/menu/drawer_menu.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<menu xmlns:android=\"http://schemas.android.com/apk/res/android\">\r\n    <item android:id=\"@+id/nav_profile\"\r\n        android:title=\"Edit Profile\"\r\n        />\r\n    <item android:id=\"@+id/nav_own_items\"\r\n        android:title=\"Managed Item\"\r\n        />\r\n    <item android:id=\"@+id/chat_room_entrance\"\r\n        android:title=\"Chat Room\"\r\n        />\r\n    <!-- Add more items as needed -->\r\n</menu>
+===================================================================
+diff --git a/app/src/main/res/menu/drawer_menu.xml b/app/src/main/res/menu/drawer_menu.xml
+--- a/app/src/main/res/menu/drawer_menu.xml	
++++ b/app/src/main/res/menu/drawer_menu.xml	
+@@ -1,13 +1,18 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <menu xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:id="@+id/nav_profile"
+-        android:title="Edit Profile"
+-        />
+-    <item android:id="@+id/nav_own_items"
+-        android:title="Managed Item"
+-        />
+-    <item android:id="@+id/chat_room_entrance"
+-        android:title="Chat Room"
+-        />
+-    <!-- Add more items as needed -->
++    <group android:id="@+id/g1">
++        <item
++            android:id="@+id/nav_profile"
++            android:title="Edit Profile" />
++    </group>
++    <group android:id="@+id/g2">
++        <item
++            android:id="@+id/nav_own_items"
++            android:title="Managed Item" />
++    </group>
++    <group android:id="@+id/g3">
++        <item
++            android:id="@+id/chat_room_entrance"
++            android:title="Chat Room" />
++    </group>
+ </menu>
+\ No newline at end of file
+Index: app/src/main/res/layout/nav_header.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"@dimen/nav_header_height\"\r\n    android:orientation=\"vertical\"\r\n    android:padding=\"16dp\"\r\n    android:background=\"@color/colorPrimary\">\r\n    <TextView\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Header Title\"\r\n        android:textColor=\"@android:color/white\"\r\n        android:textSize=\"21sp\"/>\r\n</LinearLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/nav_header.xml b/app/src/main/res/layout/nav_header.xml
+--- a/app/src/main/res/layout/nav_header.xml	
++++ b/app/src/main/res/layout/nav_header.xml	
+@@ -1,14 +1,19 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="@dimen/nav_header_height"
++    android:background="@color/colorPrimary"
+     android:orientation="vertical"
+-    android:padding="16dp"
+-    android:background="@color/colorPrimary">
++    android:padding="16dp">
++
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:text="Header Title"
++        android:text="TradeTrove"
+         android:textColor="@android:color/white"
+-        android:textSize="21sp"/>
+-</LinearLayout>
+\ No newline at end of file
++        android:textSize="30sp"
++
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintLeft_toLeftOf="parent" />
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_edit_profile.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:padding=\"16dp\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/profileTitle\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:gravity=\"center_horizontal\"\r\n        android:text=\"Edit own profile\"\r\n        android:textSize=\"34sp\" />\r\n\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextPhoneNumber\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@+id/profileTitle\"\r\n        android:hint=\"Phone Number\"\r\n        android:inputType=\"phone\"\r\n        android:maxLines=\"1\"\r\n        android:layout_marginBottom=\"16dp\"/>\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextUsername\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@id/editTextPhoneNumber\"\r\n        android:hint=\"Username\"\r\n        android:maxLines=\"1\"\r\n        android:layout_marginBottom=\"16dp\"/>\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonSubmit\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_below=\"@id/editTextUsername\"\r\n        android:text=\"Submit\"/>\r\n\r\n</RelativeLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/activity_edit_profile.xml b/app/src/main/res/layout/activity_edit_profile.xml
+--- a/app/src/main/res/layout/activity_edit_profile.xml	
++++ b/app/src/main/res/layout/activity_edit_profile.xml	
+@@ -1,43 +1,52 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
++    android:background="@drawable/bg2"
+     android:padding="16dp">
+ 
+-    <TextView
+-        android:id="@+id/profileTitle"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:gravity="center_horizontal"
+-        android:text="Edit own profile"
+-        android:textSize="34sp" />
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:orientation="vertical"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintTop_toTopOf="parent">
++
++        <TextView
++            android:id="@+id/profileTitle"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:gravity="center_horizontal"
++            android:text="Edit own profile"
++            android:textSize="34sp" />
+ 
+ 
+-    <EditText
+-        android:id="@+id/editTextPhoneNumber"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_below="@+id/profileTitle"
+-        android:hint="Phone Number"
+-        android:inputType="phone"
+-        android:maxLines="1"
+-        android:layout_marginBottom="16dp"/>
++        <EditText
++            android:id="@+id/editTextPhoneNumber"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@+id/profileTitle"
++            android:layout_marginBottom="16dp"
++            android:hint="Phone Number"
++            android:inputType="phone"
++            android:maxLines="1" />
+ 
+-    <EditText
+-        android:id="@+id/editTextUsername"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_below="@id/editTextPhoneNumber"
+-        android:hint="Username"
+-        android:maxLines="1"
+-        android:layout_marginBottom="16dp"/>
++        <EditText
++            android:id="@+id/editTextUsername"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextPhoneNumber"
++            android:layout_marginBottom="16dp"
++            android:hint="Username"
++            android:maxLines="1" />
+ 
+-    <Button
+-        android:id="@+id/buttonSubmit"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_below="@id/editTextUsername"
+-        android:text="Submit"/>
+-
+-</RelativeLayout>
+\ No newline at end of file
++        <Button
++            android:id="@+id/buttonSubmit"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextUsername"
++            android:text="Submit" />
++    </LinearLayout>
++</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_register.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!-- activity_register.xml -->\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:padding=\"16dp\">\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextEmail\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:hint=\"@string/email_hint\"\r\n        android:inputType=\"textEmailAddress\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextPassword\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:hint=\"@string/password_hint\"\r\n        android:inputType=\"textPassword\"\r\n        android:layout_below=\"@id/editTextEmail\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextConfirmPassword\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:hint=\"@string/confirm_password_hint\"\r\n        android:inputType=\"textPassword\"\r\n        android:layout_below=\"@id/editTextPassword\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonRegister\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"@string/register_button\"\r\n        android:layout_below=\"@id/editTextConfirmPassword\" />\r\n</RelativeLayout>\r\n
+===================================================================
+diff --git a/app/src/main/res/layout/activity_register.xml b/app/src/main/res/layout/activity_register.xml
+--- a/app/src/main/res/layout/activity_register.xml	
++++ b/app/src/main/res/layout/activity_register.xml	
+@@ -1,36 +1,58 @@
+ <!-- activity_register.xml -->
+-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
++    android:background="@drawable/bg1"
+     android:padding="16dp">
+ 
+-    <EditText
+-        android:id="@+id/editTextEmail"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:hint="@string/email_hint"
+-        android:inputType="textEmailAddress" />
++    <TextView
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="30dp"
++        android:layout_marginBottom="20dp"
++        android:gravity="center"
++        android:text="Welcome"
++        android:textSize="40sp"
++        android:textStyle="bold"
++        app:layout_constraintBottom_toTopOf="@id/ll" />
++
++    <LinearLayout
++        android:id="@+id/ll"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:orientation="vertical"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintTop_toTopOf="parent">
++
++        <EditText
++            android:id="@+id/editTextEmail"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:hint="@string/email_hint"
++            android:inputType="textEmailAddress" />
+ 
+-    <EditText
+-        android:id="@+id/editTextPassword"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:hint="@string/password_hint"
+-        android:inputType="textPassword"
+-        android:layout_below="@id/editTextEmail" />
++        <EditText
++            android:id="@+id/editTextPassword"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextEmail"
++            android:hint="@string/password_hint"
++            android:inputType="textPassword" />
+ 
+-    <EditText
+-        android:id="@+id/editTextConfirmPassword"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:hint="@string/confirm_password_hint"
+-        android:inputType="textPassword"
+-        android:layout_below="@id/editTextPassword" />
++        <EditText
++            android:id="@+id/editTextConfirmPassword"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextPassword"
++            android:hint="@string/confirm_password_hint"
++            android:inputType="textPassword" />
+ 
+-    <Button
+-        android:id="@+id/buttonRegister"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:text="@string/register_button"
+-        android:layout_below="@id/editTextConfirmPassword" />
+-</RelativeLayout>
++        <Button
++            android:id="@+id/buttonRegister"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextConfirmPassword"
++            android:text="@string/register_button" />
++    </LinearLayout>
++</androidx.constraintlayout.widget.ConstraintLayout>
+Index: app/src/main/res/layout/activity_login.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!-- activity_login.xml -->\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextEmail\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:hint=\"@string/email_hint\"\r\n        android:inputType=\"textEmailAddress\" />\r\n\r\n    <EditText\r\n        android:id=\"@+id/editTextPassword\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:hint=\"@string/password_hint\"\r\n        android:inputType=\"textPassword\"\r\n        android:layout_below=\"@id/editTextEmail\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonLogin\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"@string/login_button\"\r\n        android:layout_below=\"@id/editTextPassword\" />\r\n\r\n    <Button\r\n        android:id=\"@+id/buttonGoToRegister\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"@string/register_button\"\r\n        android:layout_below=\"@id/buttonLogin\" />\r\n</RelativeLayout>\r\n
+===================================================================
+diff --git a/app/src/main/res/layout/activity_login.xml b/app/src/main/res/layout/activity_login.xml
+--- a/app/src/main/res/layout/activity_login.xml	
++++ b/app/src/main/res/layout/activity_login.xml	
+@@ -1,34 +1,57 @@
+ <!-- activity_login.xml -->
+-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+-    android:layout_height="match_parent">
++    android:layout_height="match_parent"
++    android:background="@drawable/bg2">
++
++    <TextView
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="30dp"
++        android:layout_marginBottom="20dp"
++        android:gravity="center"
++        android:text="Trade Trove"
++        android:textSize="40sp"
++        android:textStyle="bold"
++        app:layout_constraintBottom_toTopOf="@id/ll" />
++
++    <LinearLayout
++        android:id="@+id/ll"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_margin="50dp"
++        android:orientation="vertical"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintTop_toTopOf="parent">
+ 
+-    <EditText
+-        android:id="@+id/editTextEmail"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:hint="@string/email_hint"
+-        android:inputType="textEmailAddress" />
++        <EditText
++            android:id="@+id/editTextEmail"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:hint="@string/email_hint"
++            android:inputType="textEmailAddress" />
+ 
+-    <EditText
+-        android:id="@+id/editTextPassword"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:hint="@string/password_hint"
+-        android:inputType="textPassword"
+-        android:layout_below="@id/editTextEmail" />
++        <EditText
++            android:id="@+id/editTextPassword"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextEmail"
++            android:hint="@string/password_hint"
++            android:inputType="textPassword" />
+ 
+-    <Button
+-        android:id="@+id/buttonLogin"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:text="@string/login_button"
+-        android:layout_below="@id/editTextPassword" />
++        <Button
++            android:id="@+id/buttonLogin"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/editTextPassword"
++            android:text="@string/login_button" />
+ 
+-    <Button
+-        android:id="@+id/buttonGoToRegister"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:text="@string/register_button"
+-        android:layout_below="@id/buttonLogin" />
+-</RelativeLayout>
++        <Button
++            android:id="@+id/buttonGoToRegister"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_below="@id/buttonLogin"
++            android:text="@string/register_button" />
++    </LinearLayout>
++</androidx.constraintlayout.widget.ConstraintLayout>
+Index: app/src/main/java/com/example/cs4084_app/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.cs4084_app;\r\n\r\nimport static android.content.ContentValues.TAG;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.ActionBarDrawerToggle;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.Toolbar;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.core.view.GravityCompat;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\n\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.text.Editable;\r\nimport android.text.TextWatcher;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.AdapterView;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.LinearLayout;\r\nimport android.widget.ListView;\r\nimport android.Manifest;\r\nimport android.widget.SearchView;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.location.FusedLocationProviderClient;\r\nimport com.google.android.gms.location.LocationServices;\r\nimport com.google.android.gms.maps.CameraUpdateFactory;\r\nimport com.google.android.gms.maps.model.LatLng;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.android.material.floatingactionbutton.FloatingActionButton;\r\nimport com.google.android.material.navigation.NavigationView;\r\nimport com.google.android.material.slider.RangeSlider;\r\nimport com.google.firebase.FirebaseApp;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.Filter;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.QueryDocumentSnapshot;\r\nimport com.google.firebase.firestore.QuerySnapshot;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\nimport com.google.firebase.storage.UploadTask;\r\n\r\nimport java.io.File;\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n    private List<Product> productList;\r\n    private ListView listView;\r\n    private DrawerLayout drawer;\r\n    private Double [] currentLocation= {0.0, 0.0};\r\n    private double minPrice;\r\n    private double maxPrice;\r\n\r\n    private String searchName=\"\";\r\n    private static final int PICK_IMAGE_REQUEST = 1;\r\n    private static final int ADD_PRODUCT_REQUEST = 2;  // Request code\r\n    private static final int YOUR_PERMISSION_CODE = 1;\r\n    private static final int LOCATION_PERMISSION_REQUEST_CODE=101;\r\n    private FirebaseAuth mAuth;\r\n    private FirebaseFirestore db;\r\n    private String[] data={\"apple\",\"pear\",\"strawberry\",\"Orange\",\"watermelon\",\"apple\",\"pear\",\"strawberry\",\"Orange\",\r\n            \"watermelon\",\"apple\",\"pear\",\"strawberry\",\"Orange\",\"watermelon\",\"apple\",\"pear\",\"strawberry\",\"Orange\",\"watermelon\",\"apple\",\"pear\",\"strawberry\",\"Orange\",\r\n            \"watermelon\",\"apple\",\"pear\",\"strawberry\",\"Orange\",\"watermelon\"};\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n        FloatingActionButton fab = findViewById(R.id.fab);\r\n        fab.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                // 执行点击事件的代码，比如跳转到新的Activity或者显示一个Toast消息\r\n                Toast.makeText(MainActivity.this, \"FAB Clicked\", Toast.LENGTH_SHORT).show();\r\n                Intent intent = new Intent(MainActivity.this, CreateItemActivity.class);\r\n                startActivityForResult(intent, ADD_PRODUCT_REQUEST);\r\n            }\r\n        });\r\n// Initialize Firebase instances\r\n        mAuth = FirebaseAuth.getInstance();\r\n        db = FirebaseFirestore.getInstance();\r\n        FirebaseApp.initializeApp(this);\r\n        FirebaseStorage storage = FirebaseStorage.getInstance();\r\n        initCurrentLocation();\r\n        initDrawerLayout();\r\n        initFliterArea();\r\n        updatePriceLimitation();\r\n        initList();\r\n        checkProfileExist();\r\n//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {\r\n//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSION_CODE);\r\n//        }\r\n//        Intent intent = new Intent();\r\n//        intent.setType(\"image/*\");\r\n//        intent.setAction(Intent.ACTION_GET_CONTENT);\r\n//        startActivityForResult(Intent.createChooser(intent, \"Select Picture\"), PICK_IMAGE_REQUEST);\r\n        //initFruits();\r\n        //initdb();\r\n\r\n        //initImage();\r\n//        ProductAdapter adapter=new ProductAdapter(MainActivity.this,R.layout.fruit_item,productList);\r\n//        ListView listView=(ListView) findViewById(R.id.list_view);\r\n//        listView.setAdapter(adapter);\r\n        //set Create button\r\n\r\n    }\r\n    private void initFruits(){\r\n        for (int i = 0; i < data.length; i++) {\r\n//            Product product = new Product( R.drawable.e,data[i], \"Description for \" + data[i], \"$9.99\", \"Location for \" + data[i]);\r\n//            productList.add(product);\r\n        }\r\n    }\r\n\r\n    private void initdb(){\r\n        FirebaseFirestore db = FirebaseFirestore.getInstance();\r\n\r\n// Create a new product with attributes\r\n        Map<String, Object> product = new HashMap<>();\r\n        product.put(\"name\", \"Apple\");\r\n        product.put(\"short_description\", \"Fresh apple\");\r\n        product.put(\"long_description\",\"long_long_description...........\");\r\n        product.put(\"price\", 1.99);\r\n        product.put(\"category\",\"food\");\r\n        product.put(\"is_sold\",false);\r\n        product.put(\"location\", \"Orchard\");\r\n        product.put(\"imageUrl\",\"example.jpg\");\r\n\r\n// Add a new document with a generated ID\r\n        db.collection(\"products\")\r\n                .add(product)\r\n                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {\r\n                    @Override\r\n                    public void onSuccess(DocumentReference documentReference) {\r\n                        Log.d(TAG, \"DocumentSnapshot added with ID: \" + documentReference.getId());\r\n                    }\r\n                })\r\n                .addOnFailureListener(new OnFailureListener() {\r\n                    @Override\r\n                    public void onFailure(@NonNull Exception e) {\r\n                        Log.w(TAG, \"Error adding document\", e);\r\n                    }\r\n                });\r\n    }\r\n    private void initList(){\r\n        FirebaseFirestore db = FirebaseFirestore.getInstance();\r\n        db.collection(\"products\")\r\n                .where(\r\n                        Filter.and(\r\n                                Filter.equalTo(\"is_sold\", false)\r\n                                //Filter.greaterThan(\"price\",0)\r\n                        )\r\n                )\r\n\r\n                //.whereGreaterThanOrEqualTo(\"price\",0)\r\n                //.whereLessThanOrEqualTo(\"price\",maxPrice)\r\n                .get()\r\n                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<QuerySnapshot> task) {\r\n                        if (task.isSuccessful()) {\r\n                            productList = new ArrayList<>();\r\n                            for (QueryDocumentSnapshot document : task.getResult()) {\r\n                                if(searchName.isEmpty()) {\r\n                                    if (minPrice <= document.getDouble(\"price\") && document.getDouble(\"price\") <= maxPrice) {\r\n                                        Log.d(TAG, document.getId() + \" => \" + document.getData());\r\n                                        Product product = document.toObject(Product.class);\r\n                                        product.setItemID(document.getId());\r\n                                        product.setUid(document.getString(\"uid\"));\r\n                                        productList.add(product);\r\n                                    }\r\n                                }else{\r\n                                    if (document.getString(\"name\").toLowerCase().contains(searchName.toLowerCase())&&\r\n                                            minPrice <= document.getDouble(\"price\") && document.getDouble(\"price\") <= maxPrice) {\r\n                                        Log.d(TAG, document.getId() + \" => \" + document.getData());\r\n                                        Product product = document.toObject(Product.class);\r\n                                        product.setItemID(document.getId());\r\n                                        productList.add(product);\r\n                                    }\r\n                                }\r\n                            }\r\n                            // Update your adapter with this productList\r\n                            ProductAdapter adapter = new ProductAdapter(MainActivity.this, R.layout.product_item, productList,currentLocation[0],currentLocation[1]);\r\n                            listView = (ListView) findViewById(R.id.list_view);\r\n                            listView.setAdapter(adapter);\r\n                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {\r\n                                @Override\r\n                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {\r\n                                    Product clickedProduct = productList.get(position);\r\n\r\n                                    Intent detailIntent = new Intent(MainActivity.this, ItemDetailedActivity.class);\r\n\r\n                                    // Passing data to the ProductDetailActivity\r\n                                    detailIntent.putExtra(\"name\", clickedProduct.getName());\r\n                                    detailIntent.putExtra(\"short_description\", clickedProduct.getShortDescription());\r\n                                    detailIntent.putExtra(\"long_description\", clickedProduct.getLongDescription());\r\n                                    detailIntent.putExtra(\"price\", clickedProduct.getPrice());\r\n                                    detailIntent.putExtra(\"location\", clickedProduct.getLocation());\r\n                                    detailIntent.putExtra(\"imageURl\", clickedProduct.getImageUrl());\r\n                                    detailIntent.putExtra(\"latitude\", clickedProduct.getLatitude());\r\n                                    detailIntent.putExtra(\"longitude\", clickedProduct.getLongitude());\r\n                                    detailIntent.putExtra(\"itemID\",clickedProduct.getItemID());\r\n                                    detailIntent.putExtra(\"uid\",clickedProduct.getUid());\r\n//                                    // If you're passing an image ID, make sure it's passed correctly and received in the ProductDetailActivity.\r\n//                                    // If your images are stored as resource IDs (like R.drawable.image_name), you can pass them directly.\r\n//                                    detailIntent.putExtra(\"imageId\", clickedProduct.getImageId());\r\n\r\n                                    startActivity(detailIntent);\r\n                                }\r\n                            });\r\n                        } else {\r\n                            Log.w(TAG, \"Error getting documents.\", task.getException());\r\n                        }\r\n                    }\r\n                });\r\n\r\n    }\r\n    public void initImage(){\r\n        FirebaseStorage storage = FirebaseStorage.getInstance();\r\n        StorageReference storageRef = storage.getReference();\r\n        StorageReference imageRef = storageRef.child(\"drawable/a.jpg\");\r\n\r\n        Uri file = Uri.fromFile(new File(\"I:/AndroidExample/CS4084_app/app/src/main/res/drawable/a.jpg\"));\r\n        UploadTask uploadTask = imageRef.putFile(file);\r\n\r\n        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {\r\n            @Override\r\n            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {\r\n                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {\r\n                    @Override\r\n                    public void onSuccess(Uri uri) {\r\n                        String imageUrl = uri.toString();\r\n                        saveImageUrlToFirestore(imageUrl);\r\n                    }\r\n                });\r\n            }\r\n        }).addOnFailureListener(new OnFailureListener() {\r\n            @Override\r\n            public void onFailure(@NonNull Exception exception) {\r\n                // Handle unsuccessful uploads\r\n            }\r\n        });\r\n    }\r\n    public void saveImageUrlToFirestore(String imageUrl) {\r\n        FirebaseFirestore db = FirebaseFirestore.getInstance();\r\n        Map<String, Object> data = new HashMap<>();\r\n        data.put(\"imageUrl\", imageUrl);\r\n\r\n        db.collection(\"images\").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {\r\n            @Override\r\n            public void onSuccess(DocumentReference documentReference) {\r\n                Log.d(\"Firestore\", \"DocumentSnapshot written with ID: \" + documentReference.getId());\r\n            }\r\n        }).addOnFailureListener(new OnFailureListener() {\r\n            @Override\r\n            public void onFailure(@NonNull Exception e) {\r\n                Log.w(\"Firestore\", \"Error adding document\", e);\r\n            }\r\n        });\r\n    }\r\n    @Override\r\n    protected void onActivityResult(int requestCode, int resultCode, Intent data) {\r\n        super.onActivityResult(requestCode, resultCode, data);\r\n\r\n        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {\r\n            Uri imageUri = data.getData();\r\n\r\n            // 使用这个 URI 进行上传操作\r\n            uploadImageToFirebase(imageUri);\r\n        }\r\n        if (requestCode == ADD_PRODUCT_REQUEST) {\r\n            // Check if the result was a success and that data might have changed\r\n            if (resultCode == RESULT_OK) {\r\n                // Refresh your data here\r\n                initList();\r\n            }\r\n        }\r\n    }\r\n    private void uploadImageToFirebase(Uri uri) {\r\n        FirebaseStorage storage = FirebaseStorage.getInstance();\r\n        StorageReference storageRef = storage.getReference();\r\n        StorageReference fileRef = storageRef.child(\"uploads/\" + System.currentTimeMillis() + \".jpg\");\r\n        fileRef.putFile(uri)\r\n                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {\r\n                    @Override\r\n                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {\r\n                        // 上传成功\r\n                        Toast.makeText(getApplicationContext(), \"Upload successful\", Toast.LENGTH_LONG).show();\r\n                    }\r\n                })\r\n                .addOnFailureListener(new OnFailureListener() {\r\n                    @Override\r\n                    public void onFailure(@NonNull Exception e) {\r\n                        // 上传失败\r\n                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();\r\n                    }\r\n                });\r\n    }\r\n    private void initCurrentLocation(){\r\n        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);\r\n        } else {\r\n            FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);\r\n\r\n            try {\r\n                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED) {\r\n                    locationClient.getLastLocation().addOnSuccessListener(this, location -> {\r\n                        if (location != null) {\r\n                            currentLocation[0] = location.getLatitude();\r\n                            currentLocation[1] = location.getLongitude();\r\n                        } else {\r\n                            Toast.makeText(this, \"Location not found\", Toast.LENGTH_SHORT).show();\r\n                        }\r\n                    });\r\n                }\r\n            } catch (SecurityException e) {\r\n                Toast.makeText(this, \"Location service error: \" + e.getMessage(), Toast.LENGTH_LONG).show();\r\n            }\r\n        }\r\n    }\r\n    private void initFliterArea(){\r\n        LinearLayout fliterArea = findViewById(R.id.fliter_area);\r\n        Button toggleButton = findViewById(R.id.button_toggle);\r\n        fliterArea.setVisibility(View.GONE);\r\n        toggleButton.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                if (fliterArea.getVisibility() == View.VISIBLE) {\r\n                    fliterArea.setVisibility(View.GONE);\r\n                } else {\r\n                    fliterArea.setVisibility(View.VISIBLE);\r\n                }\r\n            }\r\n        });\r\n    }\r\n    private void updatePriceLimitation(){\r\n        EditText minPriceText=findViewById(R.id.minPriceText);\r\n        EditText maxPriceText=findViewById(R.id.maxPriceText);\r\n\r\n        minPrice=Double.parseDouble(String.valueOf(minPriceText.getText()));\r\n        maxPrice=Double.parseDouble(String.valueOf(maxPriceText.getText()));\r\n        minPriceText.addTextChangedListener(new TextWatcher() {\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n                // 此处代码通常留空，因为我们不需要在文本变化前做什么\r\n            }\r\n\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                // 文本变化时调用，但处理逻辑放在下面的afterTextChanged中\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n                // 检查和调整输入值\r\n                if (!s.toString().isEmpty()) {\r\n                    try {\r\n                        double value = Double.parseDouble(s.toString());\r\n                        if (value < 0) {\r\n                            minPriceText.setText(\"0\"); // 如果值小于0，则设置为0\r\n                            minPriceText.setSelection(minPriceText.getText().length()); // 设置光标位置到末尾\r\n\r\n                        }\r\n                        minPrice=Double.parseDouble(String.valueOf(minPriceText.getText()));\r\n                        initList();\r\n                    } catch (NumberFormatException e) {\r\n                        minPriceText.setText(\"0\"); // 如果转换失败（非数字），也设置为0\r\n                        minPriceText.setSelection(minPriceText.getText().length()); // 设置光标位置到末尾\r\n                    }\r\n                }\r\n            }\r\n        });\r\n        maxPriceText.addTextChangedListener(new TextWatcher() {\r\n            @Override\r\n            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n                // 此处代码通常留空，因为我们不需要在文本变化前做什么\r\n            }\r\n\r\n            @Override\r\n            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n                // 文本变化时调用，但处理逻辑放在下面的afterTextChanged中\r\n            }\r\n\r\n            @Override\r\n            public void afterTextChanged(Editable s) {\r\n                // 检查和调整输入值\r\n                if (!s.toString().isEmpty()) {\r\n                    try {\r\n                        double value = Double.parseDouble(s.toString());\r\n                        if (value < 0) {\r\n                            maxPriceText.setText(\"0\"); // 如果值小于0，则设置为0\r\n                            maxPriceText.setSelection(maxPriceText.getText().length()); // 设置光标位置到末尾\r\n\r\n                        }\r\n                        maxPrice=Double.parseDouble(String.valueOf(maxPriceText.getText()));\r\n                        initList();\r\n                    } catch (NumberFormatException e) {\r\n                        maxPriceText.setText(\"0\"); // 如果转换失败（非数字），也设置为0\r\n                        maxPriceText.setSelection(maxPriceText.getText().length()); // 设置光标位置到末尾\r\n                    }\r\n                }\r\n            }\r\n        });\r\n//        EditText searchText_dd = findViewById(R.id.search_view);\r\n//        searchText.addTextChangedListener(new TextWatcher() {\r\n//            @Override\r\n//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {\r\n//                // 此处代码通常留空，因为我们不需要在文本变化前做什么\r\n//            }\r\n//\r\n//            @Override\r\n//            public void onTextChanged(CharSequence s, int start, int before, int count) {\r\n//                // 文本变化时调用，但处理逻辑放在下面的afterTextChanged中\r\n//            }\r\n//\r\n//            @Override\r\n//            public void afterTextChanged(Editable s) {\r\n//                // 检查和调整输入值\r\n//                if (!s.toString().isEmpty()) {\r\n////                    try {\r\n////                        double value = Double.parseDouble(s.toString());\r\n////                        if (value < 0) {\r\n////                            searchText.setText(\"0\"); // 如果值小于0，则设置为0\r\n////                            searchText.setSelection(searchText.getText().length()); // 设置光标位置到末尾\r\n////                        }\r\n////                    } catch (NumberFormatException e) {\r\n////                        searchText.setText(\"0\"); // 如果转换失败（非数字），也设置为0\r\n////                        searchText.setSelection(searchText.getText().length()); // 设置光标位置到末尾\r\n////                    }\r\n//                    try{\r\n//                        searchName=s.toString();\r\n//                        initList();\r\n//                    }catch (NumberFormatException e){\r\n//\r\n//                    }\r\n//                }else{\r\n//                    searchName=\"\";\r\n//                }\r\n//            }\r\n//        });\r\n        SearchView searchView = findViewById(R.id.search_view);\r\n        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {\r\n            @Override\r\n            public boolean onQueryTextSubmit(String query) {\r\n                // 当用户提交查询（例如按下键盘上的搜索按钮）时调用\r\n                return false; // 如果你不处理提交事件，返回false\r\n            }\r\n\r\n            @Override\r\n            public boolean onQueryTextChange(String newText) {\r\n                searchName=newText;\r\n                initList();\r\n                // 当查询文本发生变化时调用\r\n                //checkNameInString(newText, \"Here is the target string where we need to check the name\");\r\n                return true;\r\n            }\r\n        });\r\n    }\r\n\r\n    private void initDrawerLayout(){\r\n        Toolbar toolbar = findViewById(R.id.toolbar);\r\n        setSupportActionBar(toolbar);\r\n        if (getSupportActionBar() != null) {\r\n            getSupportActionBar().setTitle(\"Second-hand online mall\");\r\n        }\r\n        drawer = findViewById(R.id.drawer_layout);\r\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(\r\n                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);\r\n        drawer.addDrawerListener(toggle);\r\n        toggle.syncState();\r\n\r\n        NavigationView navigationView = findViewById(R.id.nav_view);\r\n        navigationView.setNavigationItemSelectedListener(item -> {\r\n            // Handle navigation view item clicks here.\r\n            int id = item.getItemId();\r\n\r\n            if (id == R.id.nav_profile) {\r\n                // Handle the home action\r\n                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);\r\n                startActivity(intent);\r\n            } else if (id == R.id.nav_own_items) {\r\n                // Handle the profile action\r\n                // 启动 PersonalStoreActivity\r\n                Intent intent = new Intent(MainActivity.this, PersonalStoreActivity.class);\r\n                startActivity(intent);\r\n            }else if (id==R.id.chat_room_entrance){\r\n                Intent intent = new Intent(MainActivity.this, SplashActivity.class);\r\n                startActivity(intent);\r\n            }\r\n\r\n            drawer.closeDrawer(GravityCompat.START);\r\n            return true;\r\n        });\r\n\r\n        // Button to open drawer\r\n        findViewById(R.id.open_drawer_button).setOnClickListener(v -> drawer.openDrawer(GravityCompat.START));\r\n\r\n//        //NavigationView navigationView = findViewById(R.id.nav_view);\r\n//        RangeSlider rangeSlider = navigationView.getHeaderView(0).findViewById(R.id.range_slider);\r\n//\r\n//        rangeSlider.addOnChangeListener(new RangeSlider.OnChangeListener() {\r\n//            @Override\r\n//            public void onValueChange(RangeSlider slider, float value, boolean fromUser) {\r\n//                // Handle the value change here\r\n//                List<Float> values = slider.getValues();\r\n//                float minValue = values.get(0);\r\n//                float maxValue = values.get(1);\r\n//                // Use these values for filtering data or any other purpose\r\n//            }\r\n//        });\r\n    }\r\n    private void checkProfileExist(){\r\n        String userId = mAuth.getCurrentUser().getUid();\r\n\r\n        // Get user data from Firestore\r\n        db.collection(\"users\").document(userId).get()\r\n                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {\r\n                    @Override\r\n                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {\r\n                        if (task.isSuccessful()) {\r\n                            DocumentSnapshot document = task.getResult();\r\n                            if (document.exists()) {\r\n                                // User data found, fill the EditText fields\r\n\r\n                            } else {\r\n                                // User data not found, do nothing\r\n                                Intent intent=new Intent(MainActivity.this,EditProfileActivity.class);\r\n                                startActivity(intent);\r\n                            }\r\n                        } else {\r\n                            Toast.makeText(MainActivity.this, \"Failed to load user data\", Toast.LENGTH_SHORT).show();\r\n                        }\r\n                    }\r\n                });\r\n    }\r\n    @Override\r\n    public void onBackPressed() {\r\n        if (drawer.isDrawerOpen(GravityCompat.START)) {\r\n            drawer.closeDrawer(GravityCompat.START);\r\n        } else {\r\n            super.onBackPressed();\r\n        }\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/cs4084_app/MainActivity.java b/app/src/main/java/com/example/cs4084_app/MainActivity.java
+--- a/app/src/main/java/com/example/cs4084_app/MainActivity.java	
++++ b/app/src/main/java/com/example/cs4084_app/MainActivity.java	
+@@ -475,7 +475,7 @@
+         Toolbar toolbar = findViewById(R.id.toolbar);
+         setSupportActionBar(toolbar);
+         if (getSupportActionBar() != null) {
+-            getSupportActionBar().setTitle("Second-hand online mall");
++            getSupportActionBar().setTitle("Trading Market");
+         }
+         drawer = findViewById(R.id.drawer_layout);
+         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -34,43 +34,38 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
         buttonGoToRegister = findViewById(R.id.buttonGoToRegister);
-
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = editTextEmail.getText().toString();
-                String password = editTextPassword.getText().toString();
-
-                // 验证输入
-                if (TextUtils.isEmpty(email)) {
-                    editTextEmail.setError("Please enter your email");
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    editTextPassword.setError("Please enter password");
-                    return;
-                }
-
-                // 使用Firebase Auth进行登录
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-
-                                    // 登录成功，导航到主界面
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    // 登录失败，显示错误
-                                    Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+        buttonLogin.setOnClickListener(v -> {
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
+            // 验证输入
+            if (TextUtils.isEmpty(email)) {
+                editTextEmail.setError("Please enter your email");
+                return;
             }
+
+            if (TextUtils.isEmpty(password)) {
+                editTextPassword.setError("Please enter password");
+                return;
+            }
+
+            // 使用Firebase Auth进行登录
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+
+                                // 登录成功，导航到主界面
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                // 登录失败，显示错误
+                                Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         });
 
 
