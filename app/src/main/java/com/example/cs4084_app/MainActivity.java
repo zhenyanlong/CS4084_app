@@ -42,7 +42,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int ADD_PRODUCT_REQUEST = 2;  // Request code
     private static final int YOUR_PERMISSION_CODE = 1;
     private static final int LOCATION_PERMISSION_REQUEST_CODE=101;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private String[] data={"apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange",
             "watermelon","apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange","watermelon","apple","pear","strawberry","Orange",
             "watermelon","apple","pear","strawberry","Orange","watermelon"};
@@ -87,7 +91,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, ADD_PRODUCT_REQUEST);
             }
         });
-
+// Initialize Firebase instances
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         FirebaseApp.initializeApp(this);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         initCurrentLocation();
@@ -95,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         initFliterArea();
         updatePriceLimitation();
         initList();
+        checkProfileExist();
 //        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 //            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, YOUR_PERMISSION_CODE);
 //        }
@@ -173,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d(TAG, document.getId() + " => " + document.getData());
                                         Product product = document.toObject(Product.class);
                                         product.setItemID(document.getId());
+                                        product.setUid(document.getString("uid"));
                                         productList.add(product);
                                     }
                                 }else{
@@ -206,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
                                     detailIntent.putExtra("latitude", clickedProduct.getLatitude());
                                     detailIntent.putExtra("longitude", clickedProduct.getLongitude());
                                     detailIntent.putExtra("itemID",clickedProduct.getItemID());
+                                    detailIntent.putExtra("uid",clickedProduct.getUid());
 //                                    // If you're passing an image ID, make sure it's passed correctly and received in the ProductDetailActivity.
 //                                    // If your images are stored as resource IDs (like R.drawable.image_name), you can pass them directly.
 //                                    detailIntent.putExtra("imageId", clickedProduct.getImageId());
@@ -513,6 +522,30 @@ public class MainActivity extends AppCompatActivity {
 //                // Use these values for filtering data or any other purpose
 //            }
 //        });
+    }
+    private void checkProfileExist(){
+        String userId = mAuth.getCurrentUser().getUid();
+
+        // Get user data from Firestore
+        db.collection("users").document(userId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                // User data found, fill the EditText fields
+
+                            } else {
+                                // User data not found, do nothing
+                                Intent intent=new Intent(MainActivity.this,EditProfileActivity.class);
+                                startActivity(intent);
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
     @Override
     public void onBackPressed() {
