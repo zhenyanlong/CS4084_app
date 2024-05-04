@@ -479,11 +479,11 @@ public class MainActivity extends AppCompatActivity {
             // Handle navigation view item clicks here.
             int id = item.getItemId();
 
-            if (id == R.id.nav_home) {
+            if (id == R.id.nav_profile) {
                 // Handle the home action
                 Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
                 startActivity(intent);
-            } else if (id == R.id.nav_settings) {
+            } else if (id == R.id.nav_own_items) {
                 // Handle the profile action
                 // 启动 PersonalStoreActivity
                 Intent intent = new Intent(MainActivity.this, PersonalStoreActivity.class);
