@@ -43,10 +43,12 @@
             <Button
                 android:id="@+id/button_toggle"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"
+                android:layout_height="50dp"
+                android:layout_weight="0.15"
                 android:layout_centerHorizontal="true"
-                android:text="Fliter" />
+
+                android:background="@drawable/icon_screen"
+                />
         </LinearLayout>
     <LinearLayout
         android:id="@+id/fliter_area"

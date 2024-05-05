@@ -99,9 +99,9 @@
         <Button
             android:id="@+id/map_button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Map"/>
+            android:layout_height="50dp"
+            android:layout_weight="0.15"
+            android:background="@drawable/icon_map"/>
     </LinearLayout>
 
         <TextView
