@@ -109,7 +109,7 @@
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/icon_add" />
     </RelativeLayout>
 
     <!-- NavigationView for the navigation drawer -->
